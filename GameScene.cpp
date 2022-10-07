@@ -1,6 +1,7 @@
 ﻿#include "GameScene.h"
 #include <cassert>
 
+// 配布エンジン
 using namespace DirectX;
 
 GameScene::GameScene()
