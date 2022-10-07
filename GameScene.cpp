@@ -11,6 +11,8 @@ GameScene::GameScene()
 GameScene::~GameScene()
 {
 	delete spriteBG;
+	delete sprite1;
+	delete sprite2;
 	delete object3d;
 }
 
@@ -30,12 +32,16 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	// テクスチャ読み込み
 	Sprite::LoadTexture(1, L"Resources/background.png");
+	Sprite::LoadTexture(2, L"Resources/texture.png");
 
 	// 背景スプライト生成
 	spriteBG = Sprite::Create(1, { 0.0f,0.0f });
 	// 3Dオブジェクト生成
 	object3d = Object3d::Create();
 	object3d->Update();
+
+	sprite1 = Sprite::Create(2, { 0, 0 });
+	sprite2 = Sprite::Create(2, { 500, 500 }, { 1, 0, 0, 1 }, { 0, 0 }, false, true);
 }
 
 void GameScene::Update()
@@ -56,6 +62,12 @@ void GameScene::Update()
 		object3d->SetPosition(position);
 	}
 
+	if (input->PushKey(DIK_SPACE)) {
+		XMFLOAT2 position = sprite1->GetPosition();
+		position.x += 1.0f;
+		sprite1->SetPosition(position);
+	}
+
 	// カメラ移動
 	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
 	{
@@ -63,6 +75,15 @@ void GameScene::Update()
 		else if (input->PushKey(DIK_S)) { Object3d::CameraMoveVector({ 0.0f,-1.0f,0.0f }); }
 		if (input->PushKey(DIK_D)) { Object3d::CameraMoveVector({ +1.0f,0.0f,0.0f }); }
 		else if (input->PushKey(DIK_A)) { Object3d::CameraMoveVector({ -1.0f,0.0f,0.0f }); }
+	}
+
+	// カメラ移動
+	if (input->PushKey(DIK_W) || input->PushKey(DIK_S) || input->PushKey(DIK_D) || input->PushKey(DIK_A))
+	{
+		if (input->PushKey(DIK_W)) { Object3d::CameraMoveEyeVector({ 0.0f,+1.0f,0.0f }); }
+		else if (input->PushKey(DIK_S)) { Object3d::CameraMoveEyeVector({ 0.0f,-1.0f,0.0f }); }
+		if (input->PushKey(DIK_D)) { Object3d::CameraMoveEyeVector({ +1.0f,0.0f,0.0f }); }
+		else if (input->PushKey(DIK_A)) { Object3d::CameraMoveEyeVector({ -1.0f,0.0f,0.0f }); }
 	}
 
 	object3d->Update();
@@ -111,6 +132,8 @@ void GameScene::Draw()
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	/*sprite1->Draw();
+	sprite2->Draw();*/
 
 	// デバッグテキストの描画
 	debugText.DrawAll(cmdList);
